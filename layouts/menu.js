@@ -11,6 +11,35 @@ export default {
     },
     {
       title: true,
+      name: 'Record',
+      class: '',
+      wrapper: {
+        element: '',
+        attributes: {}
+      }
+    },
+    {
+      name: 'Day',
+      url: '/record/day',
+      icon: 'icon-notebook'
+    },
+    {
+      name: 'Week',
+      url: '/record/week',
+      icon: 'icon-notebook'
+    },
+    {
+      name: 'Month',
+      url: '/record/month',
+      icon: 'icon-notebook'
+    },
+    {
+      name: 'Year',
+      url: '/record/year',
+      icon: 'icon-notebook'
+    },
+    {
+      title: true,
       name: 'Theme',
       class: '',
       wrapper: {
