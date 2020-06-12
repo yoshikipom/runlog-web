@@ -10,6 +10,7 @@ const changeLoaderOptions = loaders => {
   }
 }
 
+
 module.exports = {
   /*
   ** Headers of the page
@@ -31,7 +32,7 @@ module.exports = {
   */
   router: {
     linkActiveClass: 'active open'
-  },  
+  },
 
   /*
   ** Customize the progress bar color
@@ -58,7 +59,7 @@ module.exports = {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    
+
   ],
 
   /*
@@ -91,7 +92,7 @@ module.exports = {
     /*
     ** You can extend webpack config here
     */
-    extend (config, { isDev, isClient }) {
+    extend(config, { isDev, isClient }) {
       if (isDev && isClient) {
         config.module.rules.push({
           enforce: 'pre',
@@ -101,9 +102,9 @@ module.exports = {
         })
 
         const vueLoader = config.module.rules.find(
-          ({loader}) => loader === 'vue-loader')
-        const { options: {loaders} } = vueLoader || { options: {} }
-        
+          ({ loader }) => loader === 'vue-loader')
+        const { options: { loaders } } = vueLoader || { options: {} }
+
         if (loaders) {
           for (const loader of Object.values(loaders)) {
             changeLoaderOptions(Array.isArray(loader) ? loader : [loader])
@@ -113,5 +114,6 @@ module.exports = {
         config.module.rules.forEach(rule => changeLoaderOptions(rule.use))
       }
     }
-  }
+  },
+  buildModules: ['@nuxt/typescript-build'],
 }
