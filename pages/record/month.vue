@@ -5,64 +5,27 @@
         <i class="icon-notebook"></i> Monthly Record
       </div>
       <div class="card-body">
-        <div class="row">
-          <div class="col-md-4">
-            <div class="p-3 mb-3 bg-primary">Primary</div>
-          </div>
-          <div class="col-md-4">
-            <div class="p-3 mb-3 bg-secondary">Secondary</div>
-          </div>
-          <div class="col-md-4">
-            <div class="p-3 mb-3 bg-success">Success</div>
-          </div>
-          <div class="col-md-4">
-            <div class="p-3 mb-3 bg-danger">Danger</div>
-          </div>
-          <div class="col-md-4">
-            <div class="p-3 mb-3 bg-warning">Warning</div>
-          </div>
-          <div class="col-md-4">
-            <div class="p-3 mb-3 bg-info">Info</div>
-          </div>
-          <div class="col-md-4">
-            <div class="p-3 mb-3 bg-light">Light</div>
-          </div>
-          <div class="col-md-4">
-            <div class="p-3 mb-3 bg-dark">Dark</div>
-          </div>
-        </div>
+        <b-table
+          :fields="fields"
+          :items="items"
+          :outlined="true"
+          :small="true"
+          :head-variant="'dark'"
+        ></b-table>
       </div>
     </div>
-
-    <div class="card">
-      <div class="card-body">
-      <b-table
-        :striped="striped"
-        :bordered="bordered"
-        :borderless="borderless"
-        :outlined="outlined"
-        :small="small"
-        :hover="hover"
-        :dark="dark"
-        :fixed="fixed"
-        :foot-clone="footClone"
-        :no-border-collapse="noCollapse"
-        :items="items"
-        :fields="fields"
-        :head-variant="headVariant"
-        :table-variant="tableVariant"
-      ></b-table>
-    </div>
-    </div>
-
   </div>
 </template>
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
 import { ThisTypedComponentOptionsWithRecordProps } from "vue/types/options";
+import { Context } from "@nuxt/types";
 
-interface Data {}
+interface Data {
+  fields: string[];
+  items: any[];
+}
 interface Methods {}
 interface Computed {}
 interface Props {}
@@ -74,39 +37,26 @@ const options: ThisTypedComponentOptionsWithRecordProps<
   Computed,
   Props
 > = {
-  name: "colors",
-  data() {
-      return {
-        fields: ['first_name', 'last_name', 'age'],
-        items: [
-          { age: 40, first_name: 'Dickerson', last_name: 'Macdonald' },
-          { age: 21, first_name: 'Larsen', last_name: 'Shaw' },
-          { age: 89, first_name: 'Geneva', last_name: 'Wilson' }
-        ],
-        tableVariants: [
-          'primary',
-          'secondary',
-          'info',
-          'danger',
-          'warning',
-          'success',
-          'light',
-          'dark'
-        ],
-        striped: false,
-        bordered: false,
-        borderless: false,
-        outlined: true,
-        small: true,
-        hover: false,
-        dark: false,
-        fixed: false,
-        footClone: false,
-        headVariant: 'dark',
-        tableVariant: '',
-        noCollapse: false
-      }
-    }
+  name: "monthly-record",
+  async asyncData(context: Context) {
+    const { $axios, error } = context;
+
+    let items;
+    const url = "http://localhost:8080/monthRecords?year=2020&month=6";
+    const res = await $axios
+      .$get(url)
+      .then((res) => {
+        items = res;
+      })
+      .catch((e) =>
+        error({ statusCode: 500, message: "failed to get month record" })
+      );
+
+    return {
+      fields: ["id", "date", "distance", "memo"],
+      items,
+    };
+  },
 };
 
 export default Vue.extend(options);
