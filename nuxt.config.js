@@ -68,9 +68,18 @@ module.exports = {
   modules: [
     // Doc: https://github.com/nuxt-community/axios-module#usage
     '@nuxtjs/axios',
+    '@nuxtjs/proxy',
     // Doc: https://github.com/bootstrap-vue/bootstrap-vue
     'bootstrap-vue/nuxt'
   ],
+  proxy: {
+    '/api': {
+      target: 'http://localhost:8080',
+      pathRewrite: {
+        '^/api': '/'
+      }
+    }
+  },
   /*
   ** Axios module configuration
   */

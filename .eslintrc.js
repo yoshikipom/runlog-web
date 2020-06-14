@@ -8,10 +8,8 @@ module.exports = {
     parser: 'babel-eslint'
   },
   extends: [
-    '@nuxtjs/eslint-config-typescript',
-    'eslint:recommended',
-    'plugin:vue/recommended',
-    'plugin:prettier/recommended'
+    "eslint:recommended",
+    "plugin:vue/recommended",
   ],
   // required to lint *.vue files
   plugins: [
