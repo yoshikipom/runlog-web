@@ -21,10 +21,17 @@
 import Vue, { PropOptions } from "vue";
 import { ThisTypedComponentOptionsWithRecordProps } from "vue/types/options";
 import { Context } from "@nuxt/types";
+import moment from "moment";
+
+const today = moment();
+const defaultYear = today.year();
+const defaultMonth = today.month() + 1;
 
 interface Data {
   fields: string[];
   items: any[];
+  year: number;
+  month: number;
 }
 interface Methods {}
 interface Computed {}
@@ -39,15 +46,15 @@ const options: ThisTypedComponentOptionsWithRecordProps<
 > = {
   name: "monthly-record",
   async asyncData(context: Context) {
-    const { $axios, error } = context;
+    const { query, $axios, error } = context;
 
+    const year = Number(query.year) || defaultYear;
+    const month = Number(query.month) || defaultMonth;
+    const url = `http://localhost:8080/api/monthRecords?year=${year}&month=${month}`;
     let items;
-    const url = "http://localhost:8080/monthRecords?year=2020&month=6";
     const res = await $axios
       .$get(url)
-      .then((res) => {
-        items = res;
-      })
+      .then((res) => (items = res))
       .catch((e) =>
         error({ statusCode: 500, message: "failed to get month record" })
       );
@@ -55,6 +62,8 @@ const options: ThisTypedComponentOptionsWithRecordProps<
     return {
       fields: ["id", "date", "distance", "memo"],
       items,
+      year,
+      month,
     };
   },
 };

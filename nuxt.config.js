@@ -70,7 +70,8 @@ module.exports = {
     '@nuxtjs/axios',
     '@nuxtjs/proxy',
     // Doc: https://github.com/bootstrap-vue/bootstrap-vue
-    'bootstrap-vue/nuxt'
+    'bootstrap-vue/nuxt',
+    ['@nuxtjs/moment', ['ja']],
   ],
   proxy: {
     '/api': {
