@@ -21,7 +21,13 @@
           :outlined="true"
           :small="true"
           :head-variant="'dark'"
-        ></b-table>
+        >
+          <template v-slot:cell(day)="data">
+            <n-link
+              :to="`/record/day?year=${year}&month=${month}&day=${data.value}`"
+            >{{ data.value }}</n-link>
+          </template>
+        </b-table>
       </div>
     </div>
   </div>
@@ -192,5 +198,9 @@ export default Vue.extend(options);
 <style scoped>
 .card-body {
   padding: 1rem;
+}
+a {
+  color: black;
+  text-decoration: underline;
 }
 </style>
