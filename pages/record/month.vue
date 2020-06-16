@@ -2,7 +2,13 @@
   <div class="animated fadeIn">
     <b-row class="justify-content-md-center align-items-center my-2">
       <b-button pill variant="secondary" size="sm" class="mx-5" @click="prev()">&lt;</b-button>
-      <span class="h3 my-0">{{ year }} 年 {{ month}} 月</span>
+      <!-- <span class="h3 my-0">{{ year }} 年 {{ month}} 月</span> -->
+      <span class="h3 my-0">
+        <b-form inline>
+          <b-form-select v-model="year" :options="years"></b-form-select>年
+          <b-form-select v-model="month" :options="months"></b-form-select>月
+        </b-form>
+      </span>
       <b-button pill variant="secondary" size="sm" class="mx-5" @click="next()">&gt;</b-button>
     </b-row>
     <div class="card">
@@ -37,6 +43,8 @@ interface Data {
   items: any[];
   year: number;
   month: number;
+  years: number[];
+  months: number[];
   selectedDate: string;
 }
 interface Methods {
@@ -78,6 +86,8 @@ const options: ThisTypedComponentOptionsWithRecordProps<
       year,
       month,
       selectedDate: "",
+      years: Array.from(new Array(50)).map((v, i) => i + 2000),
+      months: Array.from(new Array(12)).map((v, i) => i + 1),
     };
   },
   computed: {
@@ -88,6 +98,22 @@ const options: ThisTypedComponentOptionsWithRecordProps<
     nextMonth() {
       const selectedMonth = moment({ year: this.year, month: this.month });
       return selectedMonth.add(1, "month");
+    },
+  },
+  watch: {
+    year() {
+      const query = {
+        year: String(this.year),
+        month: String(this.month),
+      };
+      this.$router.push({ query });
+    },
+    month() {
+      const query = {
+        year: String(this.year),
+        month: String(this.month),
+      };
+      this.$router.push({ query });
     },
   },
   methods: {
