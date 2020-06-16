@@ -1,5 +1,10 @@
 <template>
   <div class="animated fadeIn">
+    <b-row class="justify-content-md-center align-items-center my-2">
+      <b-button pill variant="secondary" size="sm" class="mx-5" @click="prev()">&lt;</b-button>
+      <span class="h3 my-0">{{ year }} 年 {{ month}} 月</span>
+      <b-button pill variant="secondary" size="sm" class="mx-5" @click="next()">&gt;</b-button>
+    </b-row>
     <div class="card">
       <div class="card-header">
         <i class="icon-notebook"></i> Monthly Record
@@ -21,7 +26,7 @@
 import Vue, { PropOptions } from "vue";
 import { ThisTypedComponentOptionsWithRecordProps } from "vue/types/options";
 import { Context } from "@nuxt/types";
-import moment from "moment";
+import moment, { Moment } from "moment";
 
 const today = moment();
 const defaultYear = today.year();
@@ -32,9 +37,16 @@ interface Data {
   items: any[];
   year: number;
   month: number;
+  selectedDate: string;
 }
-interface Methods {}
-interface Computed {}
+interface Methods {
+  prev(): void;
+  next(): void;
+}
+interface Computed {
+  prevMonth: Moment;
+  nextMonth: Moment;
+}
 interface Props {}
 
 const options: ThisTypedComponentOptionsWithRecordProps<
@@ -45,12 +57,13 @@ const options: ThisTypedComponentOptionsWithRecordProps<
   Props
 > = {
   name: "monthly-record",
+  watchQuery: ["year", "month"],
   async asyncData(context: Context) {
     const { query, $axios, error } = context;
 
     const year = Number(query.year) || defaultYear;
     const month = Number(query.month) || defaultMonth;
-    const url = `http://localhost:8080/api/monthRecords?year=${year}&month=${month}`;
+    const url = `/api/monthRecords?year=${year}&month=${month}`;
     let items;
     const res = await $axios
       .$get(url)
@@ -64,7 +77,34 @@ const options: ThisTypedComponentOptionsWithRecordProps<
       items,
       year,
       month,
+      selectedDate: "",
     };
+  },
+  computed: {
+    prevMonth() {
+      const selectedMonth = moment({ year: this.year, month: this.month });
+      return selectedMonth.add(-1, "month");
+    },
+    nextMonth() {
+      const selectedMonth = moment({ year: this.year, month: this.month });
+      return selectedMonth.add(1, "month");
+    },
+  },
+  methods: {
+    prev() {
+      const query = {
+        year: String(this.prevMonth.year()),
+        month: String(this.prevMonth.month()),
+      };
+      this.$router.push({ query });
+    },
+    next() {
+      const query = {
+        year: String(this.nextMonth.year()),
+        month: String(this.nextMonth.month()),
+      };
+      this.$router.push({ query });
+    },
   },
 };
 
