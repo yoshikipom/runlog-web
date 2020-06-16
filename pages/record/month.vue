@@ -2,7 +2,6 @@
   <div class="animated fadeIn">
     <b-row class="justify-content-md-center align-items-center my-2">
       <b-button pill variant="secondary" size="sm" class="mx-5" @click="prev()">&lt;</b-button>
-      <!-- <span class="h3 my-0">{{ year }} 年 {{ month}} 月</span> -->
       <span class="h3 my-0">
         <b-form inline>
           <b-form-select v-model="year" :options="years"></b-form-select>年
@@ -40,7 +39,7 @@ const defaultMonth = today.month() + 1;
 
 interface Data {
   fields: string[];
-  items: any[];
+  items: Item[];
   year: number;
   month: number;
   years: number[];
@@ -57,6 +56,59 @@ interface Computed {
 }
 interface Props {}
 
+enum DayType {
+  WEEKDAY = "",
+  SATURDAY = "info",
+  SUNDAY = "danger",
+}
+
+interface Item {
+  day: number;
+  distance: number;
+  memo: string;
+  _rowVariant: DayType;
+}
+
+const createItems = (res: any, year: number, month: number): Item[] => {
+  // 月の初日から末日までデフォルト値でitem生成
+  const curDate = moment({ year, month: month - 1, date: 1 });
+  const items: Item[] = [];
+  while (true) {
+    if (curDate.month() !== month - 1) {
+      break;
+    }
+    let _rowVariant;
+    switch (curDate.day()) {
+      case 0:
+        _rowVariant = DayType.SUNDAY;
+        break;
+      case 6:
+        _rowVariant = DayType.SATURDAY;
+        break;
+      default:
+        _rowVariant = DayType.WEEKDAY;
+        break;
+    }
+    items.push({
+      day: curDate.date(),
+      distance: 0,
+      memo: "",
+      _rowVariant,
+    });
+    curDate.add(1, "days");
+  }
+
+  // データがあるところは上書き
+  for (const data of res) {
+    const day = moment(data.date).date();
+    const targetItem = items[day - 1];
+    targetItem.distance = data.distance;
+    targetItem.memo = data.memo;
+  }
+
+  return items;
+};
+
 const options: ThisTypedComponentOptionsWithRecordProps<
   Vue,
   Data,
@@ -72,16 +124,16 @@ const options: ThisTypedComponentOptionsWithRecordProps<
     const year = Number(query.year) || defaultYear;
     const month = Number(query.month) || defaultMonth;
     const url = `/api/monthRecords?year=${year}&month=${month}`;
-    let items;
-    const res = await $axios
+    let items: Item[] = [];
+    await $axios
       .$get(url)
-      .then((res) => (items = res))
+      .then((res) => (items = createItems(res, year, month)))
       .catch((e) =>
         error({ statusCode: 500, message: "failed to get month record" })
       );
 
     return {
-      fields: ["id", "date", "distance", "memo"],
+      fields: ["day", "distance", "memo"],
       items,
       year,
       month,
@@ -92,11 +144,11 @@ const options: ThisTypedComponentOptionsWithRecordProps<
   },
   computed: {
     prevMonth() {
-      const selectedMonth = moment({ year: this.year, month: this.month });
+      const selectedMonth = moment({ year: this.year, month: this.month - 1 });
       return selectedMonth.add(-1, "month");
     },
     nextMonth() {
-      const selectedMonth = moment({ year: this.year, month: this.month });
+      const selectedMonth = moment({ year: this.year, month: this.month - 1 });
       return selectedMonth.add(1, "month");
     },
   },
@@ -120,14 +172,14 @@ const options: ThisTypedComponentOptionsWithRecordProps<
     prev() {
       const query = {
         year: String(this.prevMonth.year()),
-        month: String(this.prevMonth.month()),
+        month: String(this.prevMonth.month() + 1),
       };
       this.$router.push({ query });
     },
     next() {
       const query = {
         year: String(this.nextMonth.year()),
-        month: String(this.nextMonth.month()),
+        month: String(this.nextMonth.month() + 1),
       };
       this.$router.push({ query });
     },
