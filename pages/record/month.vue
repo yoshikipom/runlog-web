@@ -27,6 +27,17 @@
               :to="`/record/day?year=${year}&month=${month}&day=${data.value}`"
             >{{ data.value }}</n-link>
           </template>
+          <template v-slot:foot(day)="data">
+            <span class="text-danger">{{ data.value }}</span>
+          </template>
+
+          <template v-slot:custom-foot="data">
+            <b-tr>
+              <b-th></b-th>
+              <b-th variant="secondary">平均: {{ave}}, 合計: {{sum}}</b-th>
+              <b-th></b-th>
+            </b-tr>
+          </template>
         </b-table>
       </div>
     </div>
@@ -59,6 +70,8 @@ interface Methods {
 interface Computed {
   prevMonth: Moment;
   nextMonth: Moment;
+  sum: number;
+  ave: string;
 }
 interface Props {}
 
@@ -156,6 +169,14 @@ const options: ThisTypedComponentOptionsWithRecordProps<
     nextMonth() {
       const selectedMonth = moment({ year: this.year, month: this.month - 1 });
       return selectedMonth.add(1, "month");
+    },
+    sum() {
+      return this.items
+        .map((item) => item.distance)
+        .reduce((result, distance) => result + distance, 0);
+    },
+    ave() {
+      return (this.sum / this.items.length).toFixed(2);
     },
   },
   watch: {
