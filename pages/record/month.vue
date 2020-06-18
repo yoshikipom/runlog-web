@@ -20,6 +20,7 @@
           :items="items"
           :outlined="true"
           :small="true"
+          :bordered="true"
           :head-variant="'dark'"
         >
           <template v-slot:cell(day)="data">
@@ -31,10 +32,10 @@
             <span class="text-danger">{{ data.value }}</span>
           </template>
 
-          <template v-slot:custom-foot="data">
+          <template v-slot:custom-foot>
             <b-tr>
               <b-th></b-th>
-              <b-th variant="secondary">平均: {{ave}}, 合計: {{sum}}</b-th>
+              <b-th variant="secondary" class="distance-column">平均: {{ave}}, 合計: {{sum}}</b-th>
               <b-th></b-th>
             </b-tr>
           </template>
@@ -152,7 +153,25 @@ const options: ThisTypedComponentOptionsWithRecordProps<
       );
 
     return {
-      fields: ["day", "distance", "memo"],
+      fields: [
+        {
+          key: "day",
+          stickyColumn: true,
+          isRowHeader: true,
+          thClass: "t-header",
+          tdClass: "day-column",
+        },
+        {
+          key: "distance",
+          thClass: "t-header",
+          tdClass: "distance-column",
+        },
+        {
+          key: "memo",
+          thClass: "t-header",
+          tdClass: "memo-column",
+        },
+      ],
       items,
       year,
       month,
@@ -216,12 +235,20 @@ const options: ThisTypedComponentOptionsWithRecordProps<
 export default Vue.extend(options);
 </script>
 
-<style scoped>
+<style>
 .card-body {
   padding: 1rem;
 }
 a {
   color: black;
-  text-decoration: underline;
+}
+.t-header {
+  text-align: center;
+}
+.day-column {
+  text-align: center;
+}
+.distance-column {
+  text-align: right;
 }
 </style>
