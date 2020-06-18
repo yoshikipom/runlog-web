@@ -79,6 +79,12 @@ module.exports = {
       pathRewrite: {
         '^/api': '/'
       }
+    },
+    '/holiday': {
+      target: 'https://holidays-jp.github.io/api/v1',
+      pathRewrite: {
+        '^/holiday': '/'
+      }
     }
   },
   /*

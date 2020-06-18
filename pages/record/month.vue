@@ -80,6 +80,7 @@ enum DayType {
   WEEKDAY = "",
   SATURDAY = "info",
   SUNDAY = "danger",
+  HOLIDAY = "danger",
 }
 
 interface Item {
@@ -89,7 +90,12 @@ interface Item {
   _rowVariant: DayType;
 }
 
-const createItems = (res: any, year: number, month: number): Item[] => {
+const createItems = (
+  res: any,
+  year: number,
+  month: number,
+  holidayDict: Map<string, string>
+): Item[] => {
   // 月の初日から末日までデフォルト値でitem生成
   const curDate = moment({ year, month: month - 1, date: 1 });
   const items: Item[] = [];
@@ -108,6 +114,10 @@ const createItems = (res: any, year: number, month: number): Item[] => {
       default:
         _rowVariant = DayType.WEEKDAY;
         break;
+    }
+    const curDateStr = curDate.format("YYYY-MM-DD");
+    if (holidayDict.hasOwnProperty(curDateStr)) {
+      _rowVariant = DayType.HOLIDAY;
     }
     items.push({
       day: curDate.date(),
@@ -141,13 +151,22 @@ const options: ThisTypedComponentOptionsWithRecordProps<
   async asyncData(context: Context) {
     const { query, $axios, error } = context;
 
+    let holidayDict: Map<string, string> = new Map();
+    const holidayUrl = `/holiday/date.json`;
+    await $axios
+      .$get(holidayUrl)
+      .then((res) => (holidayDict = res))
+      .catch((e) =>
+        error({ statusCode: 500, message: "failed to get holiday" })
+      );
+
     const year = Number(query.year) || defaultYear;
     const month = Number(query.month) || defaultMonth;
     const url = `/api/monthRecords?year=${year}&month=${month}`;
     let items: Item[] = [];
     await $axios
       .$get(url)
-      .then((res) => (items = createItems(res, year, month)))
+      .then((res) => (items = createItems(res, year, month, holidayDict)))
       .catch((e) =>
         error({ statusCode: 500, message: "failed to get month record" })
       );
