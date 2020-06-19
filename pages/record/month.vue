@@ -149,7 +149,7 @@ const options: ThisTypedComponentOptionsWithRecordProps<
   name: "monthly-record",
   watchQuery: ["year", "month"],
   async asyncData(context: Context) {
-    const { query, $axios, error } = context;
+    const { query, $axios, error, app } = context;
 
     let holidayDict: Map<string, string> = new Map();
     const holidayUrl = `/holiday/date.json`;
@@ -162,14 +162,14 @@ const options: ThisTypedComponentOptionsWithRecordProps<
 
     const year = Number(query.year) || defaultYear;
     const month = Number(query.month) || defaultMonth;
-    const url = `/api/monthRecords?year=${year}&month=${month}`;
-    let items: Item[] = [];
-    await $axios
-      .$get(url)
-      .then((res) => (items = createItems(res, year, month, holidayDict)))
+
+    const res = await app.$apiClient
+      .getMonthRecords(year, month)
+      .then((res) => res.data)
       .catch((e) =>
         error({ statusCode: 500, message: "failed to get month record" })
       );
+    const items: Item[] = createItems(res, year, month, holidayDict);
 
     return {
       fields: [
