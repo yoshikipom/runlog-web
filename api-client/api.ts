@@ -36,7 +36,7 @@ export interface Record {
      * @type {number}
      * @memberof Record
      */
-    ditance: number;
+    distance: number;
     /**
      * 
      * @type {string}
