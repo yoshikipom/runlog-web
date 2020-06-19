@@ -8,7 +8,8 @@
     "dev": "cross-env NODE_ENV=development nodemon server/index.js --watch server",
     "build": "nuxt build",
     "start": "cross-env NODE_ENV=production node server/index.js",
-    "generate": "nuxt generate"
+    "generate": "nuxt generate",
+    "generate-client": "openapi-generator generate -g typescript-axios -i ../runlog-api/docs/spec/runlog-api.v1.yaml -o ./api-client"
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.11.0",
@@ -28,6 +29,7 @@
     "@nuxtjs/eslint-config-typescript": "^2.0.0",
     "@nuxtjs/moment": "^1.6.1",
     "@nuxtjs/proxy": "^2.0.0",
+    "@openapitools/openapi-generator-cli": "^1.0.13-4.3.1",
     "babel-eslint": "^8.2.6",
     "eslint": "^4.19.1",
     "eslint-config-prettier": "^6.11.0",
