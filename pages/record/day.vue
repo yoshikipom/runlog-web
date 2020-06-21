@@ -1,5 +1,19 @@
 <template>
   <div class="animated fadeIn">
+    <b-alert
+      dismissible
+      variant="success"
+      :show="successMsg!==''"
+      @dismissed="successMsg=''"
+    >{{successMsg}}</b-alert>
+    <b-alert
+      dismissible
+      fade
+      variant="danger"
+      :show="errorMsg!==''"
+      @dismissed="errorMsg=''"
+    >{{errorMsg}}</b-alert>
+
     <b-row class="justify-content-sm-center align-items-center my-2">
       <b-button pill variant="secondary" size="sm" class="mx-5" @click="prev()">&lt;</b-button>
       <span class="h3 my-0">{{year}}年 {{month}}月 {{day}}日</span>
@@ -49,6 +63,8 @@ interface Data {
   year: number;
   month: number;
   day: number;
+  successMsg: string;
+  errorMsg: string;
 }
 
 interface Methods {
@@ -103,6 +119,8 @@ export default Vue.extend({
       year,
       month,
       day,
+      successMsg: "",
+      errorMsg: "",
     };
   },
   computed: {
@@ -126,9 +144,10 @@ export default Vue.extend({
   methods: {
     async onSubmit(evt) {
       evt.preventDefault();
-      alert(JSON.stringify(this.form));
-      const res = await this.$apiClient.postRecord(this.form);
-      alert(JSON.stringify(res.data));
+      await this.$apiClient
+        .postRecord(this.form)
+        .then((res) => (this.successMsg = "Saved successfully"))
+        .catch((e) => (this.errorMsg = "Failed to save"));
     },
     onReset(evt) {
       evt.preventDefault();
