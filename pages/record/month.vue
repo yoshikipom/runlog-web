@@ -1,6 +1,6 @@
 <template>
   <div class="animated fadeIn">
-    <b-row class="justify-content-md-center align-items-center my-2">
+    <b-row class="justify-content-sm-center align-items-center my-2">
       <b-button pill variant="secondary" size="sm" class="mx-5" @click="prev()">&lt;</b-button>
       <span class="h3 my-0">
         <b-form inline>
@@ -51,10 +51,6 @@ import { ThisTypedComponentOptionsWithRecordProps } from "vue/types/options";
 import { Context } from "@nuxt/types";
 import moment, { Moment } from "moment";
 
-const today = moment();
-const defaultYear = today.year();
-const defaultMonth = today.month() + 1;
-
 interface Data {
   fields: string[];
   items: Item[];
@@ -89,6 +85,10 @@ interface Item {
   memo: string;
   _rowVariant: DayType;
 }
+
+const today = moment();
+const defaultYear = today.year();
+const defaultMonth = today.month() + 1;
 
 const createItems = (
   res: any,
@@ -162,9 +162,11 @@ const options: ThisTypedComponentOptionsWithRecordProps<
 
     const year = Number(query.year) || defaultYear;
     const month = Number(query.month) || defaultMonth;
+    const selectedMonth: Moment = moment({ year, month: month - 1, day: 1 });
+    const monthQuery = selectedMonth.format("YYYY-MM");
 
     const res = await app.$apiClient
-      .getMonthRecords(year, month)
+      .getRecords(monthQuery)
       .then((res) => res.data)
       .catch((e) =>
         error({ statusCode: 500, message: "failed to get month record" })
