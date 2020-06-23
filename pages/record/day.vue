@@ -96,9 +96,10 @@ export default Vue.extend({
     const day = Number(query.day) || defaultDay;
 
     const selectedDate: Moment = moment({ year, month: month - 1, day });
+    const dateQuery = selectedDate.format("YYYY-MM-DD");
 
     const res: Record = await app.$apiClient
-      .getDayRecord(year, month, day)
+      .getRecordsDate(dateQuery)
       .then((res) => res.data)
       .catch((e) => {
         return {
@@ -145,7 +146,7 @@ export default Vue.extend({
     async onSubmit(evt) {
       evt.preventDefault();
       await this.$apiClient
-        .postRecord(this.form)
+        .putRecords(this.form)
         .then((res) => (this.successMsg = "Saved successfully"))
         .catch((e) => (this.errorMsg = "Failed to save"));
     },
