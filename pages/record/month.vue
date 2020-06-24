@@ -12,7 +12,15 @@
     </b-row>
     <div class="card">
       <div class="card-header">
-        <i class="icon-notebook"></i> Monthly Record
+        <i class="icon-notebook"></i> Graph
+      </div>
+      <div class="card-body">
+        <stacked-chart :x="x" :y="y" />
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <i class="icon-notebook"></i> Record
       </div>
       <div class="card-body">
         <b-table
@@ -50,6 +58,7 @@ import Vue, { PropOptions } from "vue";
 import { ThisTypedComponentOptionsWithRecordProps } from "vue/types/options";
 import { Context } from "@nuxt/types";
 import moment, { Moment } from "moment";
+import StackedChart from "@/components/charts/StackedChart";
 
 interface Data {
   fields: string[];
@@ -69,6 +78,8 @@ interface Computed {
   nextMonth: Moment;
   sum: number;
   ave: string;
+  x: number[];
+  y: number[];
 }
 interface Props {}
 
@@ -147,6 +158,9 @@ const options: ThisTypedComponentOptionsWithRecordProps<
   Props
 > = {
   name: "monthly-record",
+  components: {
+    StackedChart,
+  },
   watchQuery: ["year", "month"],
   async asyncData(context: Context) {
     const { query, $axios, error, app } = context;
@@ -217,6 +231,18 @@ const options: ThisTypedComponentOptionsWithRecordProps<
     },
     ave() {
       return (this.sum / this.items.length).toFixed(2);
+    },
+    x() {
+      return this.items.map((item) => item.day);
+    },
+    y() {
+      const results: number[] = [];
+      let stacked = 0;
+      for (const item of this.items) {
+        stacked += item.distance;
+        results.push(stacked);
+      }
+      return results;
     },
   },
   watch: {
