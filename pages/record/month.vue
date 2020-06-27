@@ -58,7 +58,7 @@ import Vue, { PropOptions } from "vue";
 import { ThisTypedComponentOptionsWithRecordProps } from "vue/types/options";
 import { Context } from "@nuxt/types";
 import moment, { Moment } from "moment";
-import StackedChart from "@/components/charts/StackedChart";
+import StackedChart from "@/components/charts/StackedChart.vue";
 
 interface Data {
   fields: string[];
@@ -68,6 +68,8 @@ interface Data {
   years: number[];
   months: number[];
   selectedDate: string;
+  x: number[];
+  y: number[];
 }
 interface Methods {
   prev(): void;
@@ -78,8 +80,6 @@ interface Computed {
   nextMonth: Moment;
   sum: number;
   ave: string;
-  x: number[];
-  y: number[];
 }
 interface Props {}
 
@@ -187,6 +187,14 @@ const options: ThisTypedComponentOptionsWithRecordProps<
       );
     const items: Item[] = createItems(res, year, month, holidayDict);
 
+    const x = items.map((item) => item.day);
+    const y: number[] = [];
+    let stacked = 0;
+    for (const item of items) {
+      stacked += item.distance;
+      y.push(stacked);
+    }
+
     return {
       fields: [
         {
@@ -213,6 +221,8 @@ const options: ThisTypedComponentOptionsWithRecordProps<
       selectedDate: "",
       years: Array.from(new Array(50)).map((v, i) => i + 2000),
       months: Array.from(new Array(12)).map((v, i) => i + 1),
+      x,
+      y,
     };
   },
   computed: {
@@ -231,18 +241,6 @@ const options: ThisTypedComponentOptionsWithRecordProps<
     },
     ave() {
       return (this.sum / this.items.length).toFixed(2);
-    },
-    x() {
-      return this.items.map((item) => item.day);
-    },
-    y() {
-      const results: number[] = [];
-      let stacked = 0;
-      for (const item of this.items) {
-        stacked += item.distance;
-        results.push(stacked);
-      }
-      return results;
     },
   },
   watch: {
