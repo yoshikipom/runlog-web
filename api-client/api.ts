@@ -22,6 +22,25 @@ import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } fr
 /**
  * 
  * @export
+ * @interface MonthRecord
+ */
+export interface MonthRecord {
+    /**
+     * 
+     * @type {number}
+     * @memberof MonthRecord
+     */
+    sum: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof MonthRecord
+     */
+    month?: number;
+}
+/**
+ * 
+ * @export
  * @interface Record
  */
 export interface Record {
@@ -72,6 +91,44 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+
+    
+            localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: globalImportUrl.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} year 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getMonthRecords: async (year: number, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'year' is not null or undefined
+            if (year === null || year === undefined) {
+                throw new RequiredError('year','Required parameter year was null or undefined when calling getMonthRecords.');
+            }
+            const localVarPath = `/monthRecords`;
+            const localVarUrlObj = globalImportUrl.parse(localVarPath, true);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (year !== undefined) {
+                localVarQueryParameter['year'] = year;
+            }
 
 
     
@@ -213,6 +270,19 @@ export const DefaultApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {number} year 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getMonthRecords(year: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<MonthRecord>>> {
+            const localVarAxiosArgs = await DefaultApiAxiosParamCreator(configuration).getMonthRecords(year, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
          * @param {string} [month] YYYY-MM
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -270,6 +340,15 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
         },
         /**
          * 
+         * @param {number} year 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getMonthRecords(year: number, options?: any): AxiosPromise<Array<MonthRecord>> {
+            return DefaultApiFp(configuration).getMonthRecords(year, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {string} [month] YYYY-MM
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -314,6 +393,17 @@ export class DefaultApi extends BaseAPI {
      */
     public deleteRecordsDate(date: string, options?: any) {
         return DefaultApiFp(this.configuration).deleteRecordsDate(date, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} year 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    public getMonthRecords(year: number, options?: any) {
+        return DefaultApiFp(this.configuration).getMonthRecords(year, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
