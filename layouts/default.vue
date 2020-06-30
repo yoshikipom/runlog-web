@@ -1,30 +1,27 @@
 <template>
   <div class="app">
-    <AppHeader/>
+    <AppHeader />
     <div class="app-body">
-      <Sidebar :navItems="nav"/>
+      <Sidebar :navItems="nav" />
       <main class="main">
-        <breadcrumb :list="list"/>
-        <div class="container-fluid">
+        <div class="container-fluid mt-3">
           <nuxt />
         </div>
       </main>
-      <AppAside/>
     </div>
-    <AppFooter/>
+    <AppFooter />
   </div>
 </template>
 
 <script>
 import nav from './menu'
-import { Header as AppHeader, Sidebar, Aside as AppAside, Footer as AppFooter, Breadcrumb } from '~/components/'
+import { Header as AppHeader, Sidebar, Footer as AppFooter, Breadcrumb } from '~/components/'
 
 export default {
   name: 'full',
   components: {
     AppHeader,
     Sidebar,
-    AppAside,
     AppFooter,
     Breadcrumb
   },
@@ -33,13 +30,5 @@ export default {
       nav: nav.items
     }
   },
-  computed: {
-    name () {
-      return this.$route.name
-    },
-    list () {
-      return this.$route.matched
-    }
-  }
 }
 </script>
