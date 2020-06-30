@@ -7,7 +7,6 @@
     >
       <span class="navbar-toggler-icon"></span>
     </button>
-    <b-link class="navbar-brand" to="#"></b-link>
     <button
       class="navbar-toggler sidebar-toggler d-md-down-none"
       type="button"
@@ -15,22 +14,18 @@
     >
       <span class="navbar-toggler-icon"></span>
     </button>
+    <b-link class="navbar-brand" to="/"></b-link>
     <b-navbar-nav class="d-md-down-none">
       <b-nav-item class="px-3">Dashboard</b-nav-item>
-      <b-nav-item class="px-3">MyPage</b-nav-item>
+      <b-nav-item class="px-3">Record</b-nav-item>
       <b-nav-item class="px-3">Social</b-nav-item>
-      <b-nav-item class="px-3">Settings</b-nav-item>
     </b-navbar-nav>
-    <b-navbar-nav class="ml-auto">
-      <b-nav-item class="d-md-down-none">
-        <i class="icon-bell"></i>
-        <b-badge pill variant="danger">5</b-badge>
-      </b-nav-item>
-      <b-nav-item class="d-md-down-none">
-        <i class="icon-location-pin"></i>
-      </b-nav-item>
+    <b-navbar-nav class="ml-auto mr-2">
       <b-nav-item class="d-md-down-none">
         <i class="icon-settings"></i>
+      </b-nav-item>
+      <b-nav-item class="d-md-down-none">
+        <i class="icon-logout"></i>
       </b-nav-item>
     </b-navbar-nav>
   </header>

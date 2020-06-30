@@ -4,8 +4,7 @@
     <div class="app-body">
       <Sidebar :navItems="nav" />
       <main class="main">
-        <breadcrumb :list="list" />
-        <div class="container-fluid">
+        <div class="container-fluid mt-3">
           <nuxt />
         </div>
       </main>
@@ -31,13 +30,5 @@ export default {
       nav: nav.items
     }
   },
-  computed: {
-    name () {
-      return this.$route.name
-    },
-    list () {
-      return this.$route.matched
-    }
-  }
 }
 </script>
