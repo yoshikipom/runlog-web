@@ -16,17 +16,17 @@
     </button>
     <b-link class="navbar-brand" to="/"></b-link>
     <b-navbar-nav class="d-md-down-none">
-      <b-nav-item class="px-3">Dashboard</b-nav-item>
-      <b-nav-item class="px-3">Record</b-nav-item>
-      <b-nav-item class="px-3">Social</b-nav-item>
+      <b-link class="nav-link px-3" to="/dashboard">Dashboard</b-link>
+      <b-link class="nav-link px-3" to="/record">Record</b-link>
+      <b-link class="nav-link px-3" to="/social">Social</b-link>
     </b-navbar-nav>
     <b-navbar-nav class="ml-auto mr-2">
-      <b-nav-item class="d-md-down-none">
+      <b-link class="nav-link px-3" to="/setting">
         <i class="icon-settings"></i>
-      </b-nav-item>
-      <b-nav-item class="d-md-down-none">
+      </b-link>
+      <b-link class="nav-link px-3" to="/login">
         <i class="icon-logout"></i>
-      </b-nav-item>
+      </b-link>
     </b-navbar-nav>
   </header>
 </template>
