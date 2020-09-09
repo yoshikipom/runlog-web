@@ -14,11 +14,11 @@
       @dismissed="errorMsg=''"
     >{{errorMsg}}</b-alert>
 
-    <b-row class="justify-content-sm-center align-items-center my-2">
-      <b-button pill variant="secondary" size="sm" class="mx-5" @click="prev()">&lt;</b-button>
-      <span class="h3 my-0">{{year}}年 {{month}}月 {{day}}日</span>
-      <b-button pill variant="secondary" size="sm" class="mx-5" @click="next()">&gt;</b-button>
-    </b-row>
+    <div class="mb-2">
+      <b-button pill variant="secondary" size="sm" class="mx-2 float-left" @click="prev()">&lt;</b-button>
+      <b-button pill variant="secondary" size="sm" class="mx-2 float-right" @click="next()">&gt;</b-button>
+      <p class="h3 my-0 text-center">{{year}}年 {{month}}月 {{day}}日</p>
+    </div>
 
     <div class="card">
       <div class="card-header">

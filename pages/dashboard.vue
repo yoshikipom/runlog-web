@@ -32,9 +32,7 @@
           :head-variant="'dark'"
         >
           <template v-slot:cell(day)="data">
-            <n-link
-              :to="`/record/day?year=${year}&month=${month}&day=${data.value}`"
-            >{{ data.value }}</n-link>
+            <n-link :to="`/record?year=${year}&month=${month}&day=${data.value}`">{{ data.value }}</n-link>
           </template>
           <template v-slot:foot(day)="data">
             <span class="text-danger">{{ data.value }}</span>
@@ -61,7 +59,7 @@ import moment, { Moment } from "moment";
 import StackedChart from "@/components/charts/StackedChart.vue";
 
 interface Data {
-  fields: string[];
+  fields: any[];
   items: Item[];
   year: number;
   month: number;
@@ -162,33 +160,36 @@ const options: ThisTypedComponentOptionsWithRecordProps<
     StackedChart,
   },
   watchQuery: ["year", "month"],
-  async asyncData(context: Context) {
-    const { query, $axios, error, app } = context;
+  async asyncData({ route, params, query, req, app }) {
+    const year = Number(route.query.year) || defaultYear;
+    const month = Number(route.query.month) || defaultMonth;
 
     let holidayDict: Map<string, string> = new Map();
     const holidayUrl = `/holiday/date.json`;
-    await $axios
+    await app.$axios
       .$get(holidayUrl)
       .then((res) => (holidayDict = res))
       .catch((e) =>
-        error({ statusCode: 500, message: "failed to get holiday" })
+        alert({ statusCode: 500, message: "failed to get holiday" })
       );
 
-    const year = Number(query.year) || defaultYear;
-    const month = Number(query.month) || defaultMonth;
-    const selectedMonth: Moment = moment({ year, month: month - 1, day: 1 });
+    const selectedMonth: Moment = moment({
+      year: year,
+      month: month - 1,
+      day: 1,
+    });
     const monthQuery = selectedMonth.format("YYYY-MM");
 
     const res = await app.$apiClient
       .getRecords(monthQuery)
       .then((res) => res.data)
       .catch((e) =>
-        error({ statusCode: 500, message: "failed to get month record" })
+        alert({ statusCode: 500, message: "failed to get month record" })
       );
     const items: Item[] = createItems(res, year, month, holidayDict);
 
     const x = items.map((item) => item.day);
-    const y: number[] = [];
+    const y = [];
     let stacked = 0;
     for (const item of items) {
       stacked += item.distance;

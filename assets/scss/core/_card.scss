@@ -1,5 +1,5 @@
 .card {
-  margin-bottom: 1.5 * $spacer;
+  margin-bottom: $spacer;
 
   // Cards with color accent
   @each $color, $value in $theme-colors {
