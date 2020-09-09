@@ -10,10 +10,10 @@ export default {
       url: '/record',
       icon: 'icon-notebook'
     },
-    {
-      name: 'Social',
-      url: '/social',
-      icon: 'icon-people '
-    }
+    // {
+    //   name: 'Social',
+    //   url: '/social',
+    //   icon: 'icon-people '
+    // }
   ]
 }

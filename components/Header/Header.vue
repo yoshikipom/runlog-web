@@ -18,7 +18,7 @@
     <b-navbar-nav class="d-md-down-none">
       <b-link class="nav-link px-3" to="/dashboard">Dashboard</b-link>
       <b-link class="nav-link px-3" to="/record">Record</b-link>
-      <b-link class="nav-link px-3" to="/social">Social</b-link>
+      <!-- <b-link class="nav-link px-3" to="/social">Social</b-link> -->
     </b-navbar-nav>
     <b-navbar-nav class="ml-auto mr-2">
       <b-link class="nav-link px-3" to="/setting">
